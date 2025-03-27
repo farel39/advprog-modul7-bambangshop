@@ -58,18 +58,18 @@ You can install Postman via this website: https://www.postman.com/downloads/
     -   [x] Commit: `Implement delete function in Subscriber repository.`
     -   [x] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
-    -   [ ] Commit: `Create Notification service struct skeleton.`
-    -   [ ] Commit: `Implement subscribe function in Notification service.`
-    -   [ ] Commit: `Implement subscribe function in Notification controller.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification service.`
-    -   [ ] Commit: `Implement unsubscribe function in Notification controller.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
+    -   [x] Commit: `Create Notification service struct skeleton.`
+    -   [x] Commit: `Implement subscribe function in Notification service.`
+    -   [x] Commit: `Implement subscribe function in Notification controller.`
+    -   [x] Commit: `Implement unsubscribe function in Notification service.`
+    -   [x] Commit: `Implement unsubscribe function in Notification controller.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-2" questions in this README.
 -   **STAGE 3: Implement notification mechanism**
-    -   [ ] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
-    -   [ ] Commit: `Implement notify function in Notification service to notify each Subscriber.`
-    -   [ ] Commit: `Implement publish function in Program service and Program controller.`
-    -   [ ] Commit: `Edit Product service methods to call notify after create/delete.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
+    -   [x] Commit: `Implement update method in Subscriber model to send notification HTTP requests.`
+    -   [x] Commit: `Implement notify function in Notification service to notify each Subscriber.`
+    -   [x] Commit: `Implement publish function in Program service and Program controller.`
+    -   [x] Commit: `Edit Product service methods to call notify after create/delete.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-3" questions in this README.
 
 ## Your Reflections
 This is the place for you to write reflections:
@@ -92,3 +92,9 @@ This is the place for you to write reflections:
 3. Postman is extremely useful for testing API endpoints efficiently, this tool helps me test my current work by testing a `POST` request to subscribe a user to a notification service. It allows me to send structured JSON payloads, inspect server responses, and validate the correct API behavior. In this case, I sent a subscription request to `http://localhost:7777/notification/subscribe/APPLIANCES` with a JSON body containing a `url` and `name`. The successful response with a `201 Created` status confirms that the request was processed correctly. Postman’s ability to display responses in a formatted JSON view helps verify if the API returns the expected data. Additionally, the tool’s features like request history, automated tests, and environment variables simplify debugging and managing different API configurations. For my Group Project and future software engineering tasks, using Postman ensures that API functionalities work as expected before integrating them into the application, reducing errors and saving development time.
 
 #### Reflection Publisher-3
+
+1. In this tutorial case, we use the Push model of the Observer Pattern. The main app (BambangShop) actively sends notifications to subscribers when an event occurs, such as adding, deleting, or promoting a product of a subscribed type. This is evident from the way the main app executes `notify()` to make HTTP requests to the Receiver app's `/receive` URL, delivering relevant event data directly. In contrast, the Pull model would require subscribers to query the main app periodically to check for updates, which is not the approach used here.
+
+2. If we were to use the Pull model instead of the Push model in this tutorial case, there would be both advantages and disadvantages. One advantage is that it reduces the server load on BambangShop since it would no longer need to make multiple HTTP requests to subscribers whenever an event occurs. Instead, subscribers would fetch updates at their own pace, preventing unnecessary outbound requests. Additionally, subscribers have more control over when they receive updates, allowing them to avoid notifications when they are not needed. This approach also handles offline subscribers better, as they can pull updates when they reconnect without missing notifications. However, the Pull model introduces several drawbacks. One major disadvantage is increased latency, as notifications would only be received when the subscriber explicitly requests them, potentially leading to delays. Another issue is unnecessary polling, where subscribers repeatedly check for updates even when no new events have occurred, resulting in wasted network traffic. Lastly, the Pull model adds complexity to the subscriber side since the Receiver app must implement logic to periodically pull data and manage already processed updates. Given the need for real-time notifications in this case, the Push model remains the better choice, ensuring that subscribers receive updates immediately when relevant events occur.
+
+3. If we decide not to use multi-threading in the notification process, the program will handle each notification sequentially, meaning it will process one subscriber at a time before moving on to the next. This can significantly slow down the notification system, especially if there are many subscribers or if some of them take a long time to respond. The main issue is that while waiting for one subscriber’s HTTP request to complete, all other notifications will be blocked, creating a bottleneck in the system. As a result, users may experience delays in receiving notifications, and the overall responsiveness of the BambangShop app could suffer. In extreme cases, if a subscriber’s server is slow or unresponsive, the entire notification process could stall, preventing other subscribers from receiving their updates in a timely manner. Multi-threading helps mitigate this issue by allowing multiple notifications to be processed concurrently, ensuring that slow or unresponsive subscribers do not affect the notification delivery to others. Without multi-threading, the system becomes inefficient, making it difficult to scale as the number of subscribers grows.
