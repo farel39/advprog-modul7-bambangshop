@@ -50,13 +50,13 @@ You can install Postman via this website: https://www.postman.com/downloads/
 ## Mandatory Checklists (Publisher)
 -   [x] Clone https://gitlab.com/ichlaffterlalu/bambangshop to a new repository.
 -   **STAGE 1: Implement models and repositories**
-    -   [ ] Commit: `Create Subscriber model struct.`
-    -   [ ] Commit: `Create Notification model struct.`
-    -   [ ] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
-    -   [ ] Commit: `Implement add function in Subscriber repository.`
-    -   [ ] Commit: `Implement list_all function in Subscriber repository.`
-    -   [ ] Commit: `Implement delete function in Subscriber repository.`
-    -   [ ] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
+    -   [x] Commit: `Create Subscriber model struct.`
+    -   [x] Commit: `Create Notification model struct.`
+    -   [x] Commit: `Create Subscriber database and Subscriber repository struct skeleton.`
+    -   [x] Commit: `Implement add function in Subscriber repository.`
+    -   [x] Commit: `Implement list_all function in Subscriber repository.`
+    -   [x] Commit: `Implement delete function in Subscriber repository.`
+    -   [x] Write answers of your learning module's "Reflection Publisher-1" questions in this README.
 -   **STAGE 2: Implement services and controllers**
     -   [ ] Commit: `Create Notification service struct skeleton.`
     -   [ ] Commit: `Implement subscribe function in Notification service.`
@@ -77,7 +77,14 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+1. In the Observer pattern, the `Subscriber` is typically defined as an interface (or a trait in Rust) so that multiple concrete implementations of the subscriber can exist. This allows flexibility where different types of observers (subscribers) can define their own behavior when receiving notifications. However, in the current BambangShop case, where all subscribers just receive HTTP notifications and behave the same way (just storing a `URL` and `name`, then sending an HTTP request when notified), then a simple `struct` like the existing `Subscriber` is enough. On the
+
+
+2. Using a `DashMap` (map/dictionary) is necessary in this case rather than a `Vec` (list) because `id` in `Program` and `url` in `Subscriber` are intended to be unique. A `Vec` would require iterating through all elements to check for uniqueness before inserting or deleting a subscriber, leading to inefficient `O(n)` operations. In contrast, `DashMap` provides `O(1)` average-time complexity for inserts, lookups, and deletions, making it more efficient for managing unique keys like `url`. Additionally, `DashMap` is concurrent, which ensures safe and efficient access in a multi-threaded environment, making it well-suited for a real-time notification system where multiple operations may happen simultaneously.
+
+3. The `Singleton` pattern ensures that only one instance of a data structure exists throughout the application's lifecycle, which is useful for global state management. However, in Rust, using a `Singleton` alone does not guarantee thread safety. Since the `SUBSCRIBERS` list is accessed and modified concurrently, a `DashMap` is necessary because it provides fine-grained locking at the bucket level, allowing multiple threads to read and write efficiently. If we only used the `Singleton` pattern with a standard `HashMap` inside a `Mutex` or `RwLock`, it would introduce performance bottlenecks due to global locking. Therefore, while `Singleton` ensures a single instance, `DashMap` is still required for safe and efficient concurrent access.
 
 #### Reflection Publisher-2
+
 
 #### Reflection Publisher-3
